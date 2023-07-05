@@ -1,0 +1,33 @@
+name: EC2 Instance Deployment
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  AWS_REGION: ap-south-1
+  AWS_ACCESS_KEY_ID: ${{ AKIAWH4J6S65IOFMONUX }}
+  AWS_SECRET_ACCESS_KEY: ${{ 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 }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.15.0
+
+      - name: Initialize Terraform
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply tfplan -auto-approve
